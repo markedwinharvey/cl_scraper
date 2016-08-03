@@ -248,7 +248,7 @@ def make_vs_plots():
 			
 			dy_mean = sum(dy_rates)/len(dy_rates)
 			SStot = sum( (dy_rates - dy_mean)**2 )
-			r2 = round(float(1-SSres/SStot),2)
+			r2 = round(float(1-SSres/SStot),2)		#r-squared = 1- residual sum of squares(func) / total sum of squares(avg)
 			
 			if outliers:
 				outliers_label = '\n'.join([ str(outliers[x]+' ('+str(outlier_point[x])+')') for x in range(len(outliers))])
@@ -261,7 +261,7 @@ def make_vs_plots():
 			)
 			
 			#-----selective labeling for values > threshold
-			dx_thresh = sorted(dx_rates)[-10]
+			dx_thresh = sorted(dx_rates)[-10]	#(highest 10 values)
 			dy_thresh = sorted(dy_rates)[-10]
 			
 			labels = [d1[x].substate for x in range(len(d1)) if x not in outlier_idx]
@@ -304,7 +304,7 @@ def get_saved_r2():
 		
 def main():
 	file_list = sp.Popen(['ls','data'],stdout=sp.PIPE).communicate()[0].split('\n')
-	file_list = ['data/'+x for x in file_list if not os.path.isdir('data/'+x)]
+	file_list = ['data/'+x for x in file_list if x.startswith('2016')]
 
 	process(file_list)	# data is accessible as data_sets['set_name'].data
 
