@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 '''
-Scrape craiglist data for post frequency estimates using requests module and the html parser
+Scrape craigslist data for post frequency estimates using requests module and the html parser
 BeautifulSoup. Autosaves csv data with timestamped filename. 
 '''
 import requests
@@ -12,18 +12,26 @@ from random import random as rand
 
 cats = {
 	'm4w': 'search/m4w',
-	'free': 'search/zip',
 	'w4m': 'search/w4m',
-	'pets': 'search/pet',
+	'm4m': 'search/m4m',
+	'w4w': 'search/w4w',
+	
 	'cas_w4m': 'search/cas?query=w4m',
 	'cas_m4w': 'search/cas?query=m4w',
 	'cas_m4m': 'search/cas?query=m4m',
 	'cas_w4w': 'search/cas?query=w4w',
-	'm4m': 'search/m4m'
 	
+	'stp': 'search/stp',
+	
+	'4sale': 'search/sss',
+	'jobs': 'search/jjj',
+	
+	'free': 'search/zip',
+	'pets': 'search/pet',
 }
 
 #-------- class declarations --------#
+
 class nation():
 	def __init__(self,name):
 		self.name=name
@@ -40,18 +48,24 @@ class substate():
 		self.name=name
 		self.url=url
 
-#-------- function declarations --------#		
+
+#-------- function declarations --------#	
+	
 def exit():
 	print;print 'Exiting...';print;sys.exit()
+
 	
 def show_nation(nation):
+	'''simple display of class data'''
 	print nation.name
 	for each_state in nation.states:
 		print ' ',each_state.name
 		for each_substate in each_state.substates:
 			print '   ',each_substate.name,each_substate.url
 
+
 def make_usa(soup):
+	''' generate usa data structure (a nation containing states, each state containing substates) '''
 	usa = nation('United States')
 	state_dat = soup.find('h1').find_next('div').contents
 
@@ -72,12 +86,19 @@ def make_usa(soup):
 				st.substates[sub_name] = subst
 	return usa
 
+
 def get_page(url):
+	'''page request'''
 	r = requests.get(url)
 	return r.text
 
 
 def scrape(filename, state_name, substate_name, base_url, cat):
+	''' Scrape page data for total_count of posts in desired category 
+		Obtain timestamp of oldest and newest posts; oldest post is is analyzed by 
+		modifying the url based on total_count
+		Append to file: state, substate, url, total_count, oldest post timestamp, newest post timestamp 
+	'''
 	
 	url = base_url + cats[cat]
 	
@@ -108,7 +129,7 @@ def scrape(filename, state_name, substate_name, base_url, cat):
 				#sometimes the order matters!
 				
 				
-			n=12+4*int(100*rand())/100.
+			n=21+6*int(100*rand())/100.
 			time.sleep(n)							#try to avoid the bot blockers
 			
 			page = bs(get_page(url))
@@ -142,13 +163,15 @@ def scrape(filename, state_name, substate_name, base_url, cat):
 
 
 def main():
-
-	cat = 'cas_w4w'
+	''' Assign category (cat) here
+		Open craigslist sites (main) page and obtain state/substate data --> usa
+		Iterate over all substate regions for this category
+	'''
+	
+	cat = 'stp'
 	
 	r = requests.get('https://www.craigslist.org/about/sites')
 	page=r.text
-	#with open('r','r') as f:
-	#	page = f.read()
 		
 	time.sleep(4)
 	soup = bs(page)
@@ -165,9 +188,9 @@ def main():
 			sub = usa.states[state].substates[substate]
 			print sub.name,sub.url
 			
-			#'''index'''
+			'''index'''
 			if index > 0:						#for resuming collection when script fails from bad site data
-			#'''index'''	
+			'''index'''	
 			
 				scrape(
 					filename=filename,
@@ -177,7 +200,7 @@ def main():
 					cat=cat
 				)
 		
-				n=12+3*int(100*rand())/100.		
+				n=21+6*int(100*rand())/100.		
 				time.sleep(n)					#try to avoid the bot blockers
 			
 			index+=1
