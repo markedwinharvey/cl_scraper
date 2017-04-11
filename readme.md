@@ -26,4 +26,4 @@ Individual plots show top 30 highest-frequency posting areas. <br>
 
 Sample auto-generated 2D plot with trendline:
 
-![sample data](https://github.com/markedwinharvey/cl_scraper/blob/master/data/figs/vs/m4w_vs_w4m_fig.png)
+![sample data](https://github.com/sigmeh/cl_scraper/blob/master/data/figs/vs/m4w_vs_w4m_fig.png)
